@@ -65,12 +65,24 @@ form input[type=text] {
     background-color: #eee;
 }
 
-.chat .username {
-    font-weight: 800;
+.chat li {
+    margin: 5px 0px;
+    list-style-type: none;
 }
 
-.chat:hover {
+.chat li:hover {
     background-color: #ddd;
+}
+
+.chat .username {
+    font-weight: 800;
+    margin-right: 5px;
+}
+
+.chat .time {
+    float: right;
+    font-size: 70%;
+
 }
 
 .spinner {
