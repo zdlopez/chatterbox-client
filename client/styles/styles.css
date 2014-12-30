@@ -59,6 +59,10 @@ input[type=text] {
     padding: 5px;
 }
 
+input.room {
+    width: 50%;
+}
+
 .chat {
     padding: 5px;
     margin-bottom: 5px;

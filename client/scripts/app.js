@@ -1,4 +1,6 @@
 // YOUR CODE HERE:
+var room = "lobby";
+
 var sanitize = function(object){
   for(keys in object){
     if (typeof object[keys] === "string") {
@@ -20,7 +22,7 @@ var display = function () {
     data: {
       order: "-createdAt",
       limit: 1000,
-      // where: {username: 'yolo'}
+      where: {'roomname': room}
       // skip: 637
     },
     contentType: 'application/json',
@@ -77,17 +79,61 @@ var packageMsg = function (msg) {
   var message = {
     'username': user,
     'text': msg,
-    'roomname': "hello"
+    'roomname': room
   };
   console.log(message);
   sendMsg(message);
 };
 
+var getRooms = function() {
+  var recentRooms = [];
+  $.ajax({
+    // always use this url
+    url: 'https://api.parse.com/1/classes/chatterbox',
+    type: 'GET',
+    data: {
+      order: "-createdAt",
+      limit: 1000,
+    },
+    contentType: 'application/json',
+    success: function (data) {
+      recentRooms = [];
+      var rooms = {};
+      for(var i = 0; i<data.results.length; i++){
+        var curRoom = data.results[i].roomname;
+        if(!rooms[curRoom]){
+          recentRooms.push(curRooms);
+        }
+        rooms[curRoom] = true;
+      }
+
+    },
+    error: function (data) {
+      // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+      console.error('chatterbox: Failed to get message');
+    }
+  });
+  var $roomSelector = $('.room');
+  $.each(recentRooms, function(key, value) {
+    $roomSelector
+      .append($("<option></option>")
+      .attr("value",key)
+      .text(value));
+  });
+}
+getRooms();
+setInterval(getRooms, 5000);
+
 $(document).ready(function() {
-  $('button').on('click', function(e) {
+  $('.textSend').on('click', function(e) {
     var msg = $('.inputText').val();
     packageMsg(msg);
     $('.inputText').val('');
+    display();
+  });
+
+  $('.room').on('change', function(e) {
+    room = $('.room').val();
     display();
   });
 })
