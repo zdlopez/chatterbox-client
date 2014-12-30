@@ -104,7 +104,19 @@ var newRoom = true;
 display();
 setInterval(display, 1000);
 
-var sendMsg = function (message) {
+var send = function (text) {
+  var user = window.location.search;
+  var param = 'username';
+  user = user.slice(user.indexOf(param) + param.length + 1)
+  var ampPos = user.indexOf("&");
+  if (ampPos > 0) {
+    user = user.slice(0, ampPos);
+  }
+  var message = {
+    'username': user,
+    'text': text,
+    'roomname': room
+  };
   $.ajax({
     url: parseURL,
     type: 'POST',
@@ -117,22 +129,6 @@ var sendMsg = function (message) {
       console.error('chatterbox: Failed to send message');
     }
   });
-};
-
-var packageMsg = function (msg) {
-  var user = window.location.search;
-  var param = 'username';
-  user = user.slice(user.indexOf(param) + param.length + 1)
-  var ampPos = user.indexOf("&");
-  if (ampPos > 0) {
-    user = user.slice(0, ampPos);
-  }
-  var message = {
-    'username': user,
-    'text': msg,
-    'roomname': room
-  };
-  sendMsg(message);
 };
 
 var getRooms = function() {
@@ -150,7 +146,7 @@ var getRooms = function() {
       var $roomSelector = $('.room');
       $roomSelector.html("");
       $roomSelector.append($("<option value='" + room + "'>" + room + "</option>"));
-      for(var i = 0; i<data.results.length; i++){
+      for(var i = 0; i < data.results.length; i++){
         var aRoom = sanitize(data.results[i].roomname);
         if(!rooms[aRoom]){
           $roomSelector.append($("<option value='"+aRoom+"'>"+aRoom+"</option>"));
@@ -168,8 +164,7 @@ setInterval(getRooms, 5000);
 
 $(document).ready(function() {
   $('.textSend').on('click', function() {
-    var msg = $('.inputText').val();
-    packageMsg(msg);
+    send($('.inputText').val());
     $('.inputText').val('');
     display();
   });
