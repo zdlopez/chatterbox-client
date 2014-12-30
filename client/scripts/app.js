@@ -145,11 +145,11 @@ var getRooms = function() {
       rooms[room] = true;
       var $roomSelector = $('.room');
       $roomSelector.html("");
-      $roomSelector.append($("<option value='" + room + "'>" + room + "</option>"));
+      $roomSelector.append($('<option value="' + room + '">' + room + '</option>'));
       for(var i = 0; i < data.results.length; i++){
         var aRoom = sanitize(data.results[i].roomname);
         if(!rooms[aRoom]){
-          $roomSelector.append($("<option value='"+aRoom+"'>"+aRoom+"</option>"));
+          $roomSelector.append($('<option value="' + aRoom + '">' + aRoom + '</option>'));
           rooms[aRoom] = true;
         }
       }
