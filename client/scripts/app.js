@@ -121,17 +121,17 @@ var sendMsg = function (message) {
 
 var packageMsg = function (msg) {
   var user = window.location.search;
-  user = user.slice(user.indexOf("username=") + 9)
-  var cut = user.indexOf("&");
-  if (cut > 0) {
-    user = user.slice(0, cut);
+  var param = 'username';
+  user = user.slice(user.indexOf(param) + param.length + 1)
+  var ampPos = user.indexOf("&");
+  if (ampPos > 0) {
+    user = user.slice(0, ampPos);
   }
   var message = {
     'username': user,
     'text': msg,
     'roomname': room
   };
-  console.log(message);
   sendMsg(message);
 };
 
@@ -146,20 +146,16 @@ var getRooms = function() {
     },
     success: function (data) {
       var rooms = {};
+      rooms[room] = true;
       var $roomSelector = $('.room');
       $roomSelector.html("");
       $roomSelector.append($("<option value='" + room + "'>" + room + "</option>"));
-      rooms[room] = true;
       for(var i = 0; i<data.results.length; i++){
-        var curRoom = sanitize(data.results[i].roomname);
-        if(!rooms[curRoom]){
-          $roomSelector
-            .append($("<option></option>")
-              .attr("value",curRoom)
-              .text(curRoom)
-            );
+        var aRoom = sanitize(data.results[i].roomname);
+        if(!rooms[aRoom]){
+          $roomSelector.append($("<option value='"+aRoom+"'>"+aRoom+"</option>"));
+          rooms[aRoom] = true;
         }
-        rooms[curRoom] = true;
       }
     },
     error: function (data) {
