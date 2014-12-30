@@ -54,8 +54,34 @@ var display = function () {
           var $li = $("<li>");
           $(".friendslist ul").append($li);
           $li.text(username);
+          friends[username] = true;
+          $(".friendslist li").tooltip({
+            items: "li",
+            content: 'loading...',
+            open: function() {
+              var element = $(this);
+              console.log(element.text());
+              $.ajax({
+                // always use this url
+                url: 'https://api.parse.com/1/classes/chatterbox',
+                type: 'GET',
+                data: {
+                  order: "-createdAt",
+                  limit: 1,
+                  where: {'username': element.text()}
+                },
+                contentType: 'application/json',
+                success: function (data) {
+                  // console.log(data);
+                  var last = data.results[0];
+                  var lastroom = last.roomname;
+                  var time = moment(last.createdAt).fromNow();
+                  element.tooltip({content: "Last post " + time + " in " + lastroom});
+                }
+              });
+            }
+          });
         }
-        friends[username] = true;
       });
 
     },
@@ -165,29 +191,5 @@ $(document).ready(function() {
     display();
   });
 
-  $(".friendslist").tooltip({
-    items: "li",
-    content: 'loading...',
-    open: function() {
-      var element = $(this);
-      $.ajax({
-        // always use this url
-        url: 'https://api.parse.com/1/classes/chatterbox',
-        type: 'GET',
-        data: {
-          order: "-createdAt",
-          limit: 1,
-          where: {'username': element.text()}
-        },
-        contentType: 'application/json',
-        success: function (data) {
-          var last = data.results[0];
-          var lastroom = last.roomname;
-          var time = moment(last.time).fromNow();
-          element.tooltip({content: "Last post " + time + " in " + lastroom});
-        }
-      });
-    }
-  });
 
 });
