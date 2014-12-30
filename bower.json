@@ -4,7 +4,8 @@
   "dependencies": {
     "jquery": "~2.0.3",
     "underscore": "~1.7.0",
-    "moment": "~2.8.4"
+    "moment": "~2.8.4",
+    "jquery-ui": "~1.11.2"
   },
   "ignore": [
     "**/.*",

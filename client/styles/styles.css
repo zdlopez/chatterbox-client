@@ -59,9 +59,21 @@ body {
 .chat {
     height: 600px;
     overflow-y: scroll;
+    width: 80%;
     padding: 5px;
     margin-bottom: 5px;
     background-color: #eee;
+    display: inline-block;
+}
+
+.friendslist {
+    height: 600px;
+    overflow-y: scroll;
+    width: 14%;
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #eee;
+    display: inline-block;
 }
 
 .chat li {
@@ -73,14 +85,26 @@ body {
     background-color: #ddd;
 }
 
+.chat li.friend .msg {
+    color: blue;
+}
+
 .chat .username {
     font-weight: 800;
     margin-right: 5px;
 }
 
+.chat .username:hover {
+    color: green;
+}
+
 .chat .time {
     float: right;
     font-size: 70%;
+}
+
+.friendslist li {
+    list-style-type: none;
 }
 
 .inputText {

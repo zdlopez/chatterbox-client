@@ -1,5 +1,6 @@
 // YOUR CODE HERE:
 var room = "lobby";
+var friends = {};
 
 var sanitize = function(object){
   for(keys in object){
@@ -23,12 +24,9 @@ var display = function () {
       order: "-createdAt",
       limit: 100,
       where: {'roomname': room}
-      // skip: 637
     },
     contentType: 'application/json',
     success: function (data) {
-      // console.log('chatterbox: Messages retrieved');
-      // console.log(data);
       $('.chat').html('');
       for (var i = 0; i < data.results.length; i++) {
         var $li = $("<li>");
@@ -37,6 +35,9 @@ var display = function () {
         var username = data.results[i].username;
         var msg = data.results[i].text;
         var time = moment(data.results[i].createdAt).fromNow();
+        if (friends[username]) {
+          $li.addClass("friend");
+        }
         $li.append("<span class = 'username'>" + username + "</span>");
         $li.append("<span class = 'msg'>" + msg + "</span>");
         $li.append("<span class = 'time'>" + time + "</span>");
@@ -46,6 +47,16 @@ var display = function () {
         $('.chat').scrollTop( 9000 );
         newRoom = false;
       }
+
+      $('.username').on('click', function(e) {
+        var username = e.target.innerText;
+        if (!friends[username]) {
+          var $li = $("<li>");
+          $(".friendslist ul").append($li);
+          $li.text(username);
+        }
+        friends[username] = true;
+      });
 
     },
     error: function (data) {
@@ -152,5 +163,31 @@ $(document).ready(function() {
     $('.custom input').val('');
     newRoom = true;
     display();
-  })
-})
+  });
+
+  $(".friendslist").tooltip({
+    items: "li",
+    content: 'loading...',
+    open: function() {
+      var element = $(this);
+      $.ajax({
+        // always use this url
+        url: 'https://api.parse.com/1/classes/chatterbox',
+        type: 'GET',
+        data: {
+          order: "-createdAt",
+          limit: 1,
+          where: {'username': element.text()}
+        },
+        contentType: 'application/json',
+        success: function (data) {
+          var last = data.results[0];
+          var lastroom = last.roomname;
+          var time = moment(last.time).fromNow();
+          element.tooltip({content: "Last post " + time + " in " + lastroom});
+        }
+      });
+    }
+  });
+
+});
