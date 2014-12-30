@@ -86,23 +86,27 @@ var packageMsg = function (msg) {
 };
 
 var getRooms = function() {
-  var recentRooms = [];
   $.ajax({
     // always use this url
     url: 'https://api.parse.com/1/classes/chatterbox',
     type: 'GET',
     data: {
       order: "-createdAt",
-      limit: 1000,
+      limit: 300,
     },
     contentType: 'application/json',
     success: function (data) {
-      recentRooms = [];
       var rooms = {};
+      var $roomSelector = $('.room');
+      $roomSelector.html("");
       for(var i = 0; i<data.results.length; i++){
         var curRoom = data.results[i].roomname;
         if(!rooms[curRoom]){
-          recentRooms.push(curRooms);
+          $roomSelector
+            .append($("<option></option>")
+              .attr("value",curRoom)
+              .text(curRoom)
+            );
         }
         rooms[curRoom] = true;
       }
@@ -112,13 +116,6 @@ var getRooms = function() {
       // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: Failed to get message');
     }
-  });
-  var $roomSelector = $('.room');
-  $.each(recentRooms, function(key, value) {
-    $roomSelector
-      .append($("<option></option>")
-      .attr("value",key)
-      .text(value));
   });
 }
 getRooms();
