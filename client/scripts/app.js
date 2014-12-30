@@ -144,8 +144,7 @@ var getRooms = function() {
       var rooms = {};
       rooms[room] = true;
       var $roomSelector = $('.room');
-      $roomSelector.html("");
-      $roomSelector.append($('<option value="' + room + '">' + room + '</option>'));
+      $roomSelector.html($('<option value="' + room + '">' + room + '</option>'));
       for(var i = 0; i < data.results.length; i++){
         var aRoom = sanitize(data.results[i].roomname);
         if(!rooms[aRoom]){
