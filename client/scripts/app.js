@@ -35,8 +35,8 @@ var display = function () {
         $(".chat").append($li);
         sanitize(data.results[i]);
         var username = data.results[i].username;
-        var msg =  data.results[i].text;
-        var time = data.results[i].createdAt;
+        var msg = data.results[i].text;
+        var time = moment(data.results[i].createdAt).fromNow();
         $li.append("<span class = 'username'>" + username + "</span>");
         $li.append("<span class = 'msg'>" + msg + "</span>");
         $li.append("<span class = 'time'>" + time + "</span>");
