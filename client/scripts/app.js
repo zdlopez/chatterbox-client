@@ -74,9 +74,13 @@ var display = function () {
                 success: function (data) {
                   // console.log(data);
                   var last = data.results[0];
-                  var lastroom = last.roomname;
-                  var time = moment(last.createdAt).fromNow();
-                  element.tooltip({content: "Last post " + time + " in " + lastroom});
+                  if (last) {
+                    var lastroom = last.roomname;
+                    var time = moment(last.createdAt).fromNow();
+                    element.tooltip({content: "Last post " + time + " in " + lastroom});
+                  } else {
+                    element.tooltip({content: "Not found"});
+                  }
                 }
               });
             }
