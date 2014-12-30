@@ -1,37 +1,42 @@
 // YOUR CODE HERE:
 var room = "lobby";
 var friends = {};
+var parseURL = 'https://api.parse.com/1/classes/chatterbox';
 
-var sanitize = function(object){
-  for(keys in object){
-    if (typeof object[keys] === "string") {
-      var original = object[keys];
-      object[keys] = encodeURI(object[keys]);
-      object[keys] = object[keys].replace(/%20/g, " ");
-      if (object[keys] !== original) {
-        object[keys] = "*sanitized*";
-      }
+var sanitize = function(string){
+  if (typeof string === "string") {
+    var sanitized = string;
+    sanitized = encodeURI(sanitized);
+    sanitized = sanitized.replace(/%20/g, " ");
+    if (sanitized !== string) {
+      sanitized = "*sanitized*";
     }
+    return sanitized
+  }
+};
+
+var sanitizeObj = function(object) {
+  for(keys in object){
+    object[keys] = sanitize(object[keys]);
   }
 };
 
 var display = function () {
   $.ajax({
-    // always use this url
-    url: 'https://api.parse.com/1/classes/chatterbox',
+    url: parseURL,
     type: 'GET',
+    contentType: 'application/json',
     data: {
       order: "-createdAt",
       limit: 100,
       where: {'roomname': room}
     },
-    contentType: 'application/json',
     success: function (data) {
       $('.chat').html('');
       for (var i = 0; i < data.results.length; i++) {
         var $li = $("<li>");
         $(".chat").prepend($li);
-        sanitize(data.results[i]);
+        sanitizeObj(data.results[i]);
         var username = data.results[i].username;
         var msg = data.results[i].text;
         var time = moment(data.results[i].createdAt).fromNow();
@@ -63,17 +68,15 @@ var display = function () {
               var element = $(this);
               console.log(element.text());
               $.ajax({
-                // always use this url
-                url: 'https://api.parse.com/1/classes/chatterbox',
+                url: parseURL,
                 type: 'GET',
+                contentType: 'application/json',
                 data: {
                   order: "-createdAt",
                   limit: 1,
                   where: {'username': element.text()}
                 },
-                contentType: 'application/json',
                 success: function (data) {
-                  // console.log(data);
                   var last = data.results[0];
                   if (last) {
                     var lastroom = last.roomname;
@@ -93,7 +96,6 @@ var display = function () {
 
     },
     error: function (data) {
-      // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: Failed to get message');
     }
   });
@@ -104,16 +106,14 @@ setInterval(display, 1000);
 
 var sendMsg = function (message) {
   $.ajax({
-    // always use this url
-    url: 'https://api.parse.com/1/classes/chatterbox',
+    url: parseURL,
     type: 'POST',
-    data: JSON.stringify(message),
     contentType: 'application/json',
+    data: JSON.stringify(message),
     success: function (data) {
       console.log('chatterbox: Message sent');
     },
     error: function (data) {
-      // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: Failed to send message');
     }
   });
@@ -126,7 +126,6 @@ var packageMsg = function (msg) {
   if (cut > 0) {
     user = user.slice(0, cut);
   }
-
   var message = {
     'username': user,
     'text': msg,
@@ -138,14 +137,13 @@ var packageMsg = function (msg) {
 
 var getRooms = function() {
   $.ajax({
-    // always use this url
-    url: 'https://api.parse.com/1/classes/chatterbox',
+    url: parseURL,
     type: 'GET',
+    contentType: 'application/json',
     data: {
       order: "-createdAt",
       limit: 100,
     },
-    contentType: 'application/json',
     success: function (data) {
       var rooms = {};
       var $roomSelector = $('.room');
@@ -153,10 +151,7 @@ var getRooms = function() {
       $roomSelector.append($("<option value='" + room + "'>" + room + "</option>"));
       rooms[room] = true;
       for(var i = 0; i<data.results.length; i++){
-        var curRoom = data.results[i].roomname;
-        var temp = {'a': curRoom};
-        sanitize(temp);
-        curRoom = temp.a;
+        var curRoom = sanitize(data.results[i].roomname);
         if(!rooms[curRoom]){
           $roomSelector
             .append($("<option></option>")
@@ -166,11 +161,9 @@ var getRooms = function() {
         }
         rooms[curRoom] = true;
       }
-
     },
     error: function (data) {
-      // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      console.error('chatterbox: Failed to get message');
+      console.error('chatterbox: Failed to get rooms');
     }
   });
 }
@@ -197,6 +190,4 @@ $(document).ready(function() {
     newRoom = true;
     display();
   });
-
-
 });
