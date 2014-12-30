@@ -27,8 +27,8 @@ var display = function () {
     },
     contentType: 'application/json',
     success: function (data) {
-      console.log('chatterbox: Messages retrieved');
-      console.log(data);
+      // console.log('chatterbox: Messages retrieved');
+      // console.log(data);
       $('.chat').html('');
       for (var i = 0; i < data.results.length; i++) {
         var $li = $("<li>");
@@ -99,8 +99,13 @@ var getRooms = function() {
       var rooms = {};
       var $roomSelector = $('.room');
       $roomSelector.html("");
+      $roomSelector.append($("<option value='" + room + "'>" + room + "</option>"));
+      rooms[room] = true;
       for(var i = 0; i<data.results.length; i++){
         var curRoom = data.results[i].roomname;
+        var temp = {'a': curRoom};
+        sanitize(temp);
+        curRoom = temp.a;
         if(!rooms[curRoom]){
           $roomSelector
             .append($("<option></option>")
@@ -122,15 +127,21 @@ getRooms();
 setInterval(getRooms, 5000);
 
 $(document).ready(function() {
-  $('.textSend').on('click', function(e) {
+  $('.textSend').on('click', function() {
     var msg = $('.inputText').val();
     packageMsg(msg);
     $('.inputText').val('');
     display();
   });
 
-  $('.room').on('change', function(e) {
+  $('.room').on('change', function() {
     room = $('.room').val();
     display();
   });
+
+  $('.custom button').on('click', function() {
+    room = $('.custom input').val();
+    $('.custom input').val('');
+    display();
+  })
 })
