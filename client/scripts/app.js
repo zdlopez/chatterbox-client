@@ -168,6 +168,14 @@ $(document).ready(function() {
     display();
   });
 
+  $('.inputText').keypress(function(e) {
+    if (e.keyCode === 13) {
+      send($('.inputText').val());
+      setTimeout(function() {$('.inputText').val(null);}, 0);
+      display();
+    }
+  });
+
   $('.room').on('change', function() {
     room = $('.room').val();
     newRoom = true;
