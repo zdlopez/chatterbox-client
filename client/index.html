@@ -17,15 +17,14 @@
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
-      <label>Room</label>
+      <span class="custom">
+        <input type="text" placeholder="Custom room"><button>Switch</button>
+      </span>
+      <span>Recent: </span>
       <select class="room" placeholder="lobby"></select>
-      <div class="custom"><input type="text" placeholder="Custom room"><button>Switch</button></div>
-      <br>
-      <br>
+      <ul class="chat"></ul>
       <input type="text" class="inputText" placeholder="Message...">
       <button class="textSend">Send</button>
-      <ul class="chat">
-      </ul>
     </div>
   </body>
 </html>

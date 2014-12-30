@@ -21,7 +21,7 @@ var display = function () {
     type: 'GET',
     data: {
       order: "-createdAt",
-      limit: 1000,
+      limit: 100,
       where: {'roomname': room}
       // skip: 637
     },
@@ -32,7 +32,7 @@ var display = function () {
       $('.chat').html('');
       for (var i = 0; i < data.results.length; i++) {
         var $li = $("<li>");
-        $(".chat").append($li);
+        $(".chat").prepend($li);
         sanitize(data.results[i]);
         var username = data.results[i].username;
         var msg = data.results[i].text;
@@ -42,6 +42,11 @@ var display = function () {
         $li.append("<span class = 'time'>" + time + "</span>");
       };
 
+      if (newRoom) {
+        $('.chat').scrollTop( 9000 );
+        newRoom = false;
+      }
+
     },
     error: function (data) {
       // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -49,6 +54,8 @@ var display = function () {
     }
   });
 };
+var newRoom = true;
+display();
 setInterval(display, 1000);
 
 var sendMsg = function (message) {
@@ -92,7 +99,7 @@ var getRooms = function() {
     type: 'GET',
     data: {
       order: "-createdAt",
-      limit: 300,
+      limit: 100,
     },
     contentType: 'application/json',
     success: function (data) {
@@ -136,12 +143,14 @@ $(document).ready(function() {
 
   $('.room').on('change', function() {
     room = $('.room').val();
+    newRoom = true;
     display();
   });
 
   $('.custom button').on('click', function() {
     room = $('.custom input').val();
     $('.custom input').val('');
+    newRoom = true;
     display();
   })
 })

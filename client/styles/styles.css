@@ -6,11 +6,11 @@ body {
 }
 
 #main {
-    width: 500px;
+    width: 900px;
     margin: auto;
     text-align: left;
     background: white;
-    padding: 50px 60px;
+    padding: 20px 30px;
     border: solid #ddd;
     border-width: 0 1px 1px 1px;
 }
@@ -46,24 +46,19 @@ body {
     line-height: 13px;
 }
 
-form {
-    padding: 20px;
-    padding-left: 0;
-    margin-bottom: 20px;
+.custom {
+    margin-right: 20px;
 }
 
-input[type=text] {
-    margin-right: 10px;
-    width: 70%;
-    font-size: 12px;
+.custom input {
+    width: 150px;
+    margin-right: 5px;
     padding: 5px;
 }
 
-input.room {
-    width: 50%;
-}
-
 .chat {
+    height: 600px;
+    overflow-y: scroll;
     padding: 5px;
     margin-bottom: 5px;
     background-color: #eee;
@@ -86,7 +81,20 @@ input.room {
 .chat .time {
     float: right;
     font-size: 70%;
+}
 
+.inputText {
+    margin-right: 10px;
+    width: 90%;
+    height: 40px;
+    font-size: 12px;
+    padding: 5px;
+}
+
+.textSend {
+    height: 50px;
+    width: 50px;
+    /*border-radius: 3px;*/
 }
 
 .spinner {
