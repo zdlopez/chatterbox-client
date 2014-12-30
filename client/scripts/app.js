@@ -21,16 +21,9 @@ var sanitizeObj = function(object) {
 };
 
 var display = function () {
-  $.ajax({
-    url: parseURL,
-    type: 'GET',
-    contentType: 'application/json',
-    data: {
-      order: "-createdAt",
-      limit: 100,
-      where: {'roomname': room}
-    },
-    success: function (data) {
+  $.get(parseURL,
+    {where: {'roomname': room}, limit: 100, order: "-createdAt"},
+    function (data) {
       $('.chat').html('');
       for (var i = 0; i < data.results.length; i++) {
         var $li = $("<li>");
@@ -66,16 +59,9 @@ var display = function () {
             open: function() {
               var element = $(this);
               console.log(element.text());
-              $.ajax({
-                url: parseURL,
-                type: 'GET',
-                contentType: 'application/json',
-                data: {
-                  order: "-createdAt",
-                  limit: 1,
-                  where: {'username': element.text()}
-                },
-                success: function (data) {
+              $.get(parseURL,
+                {where: {'username': element.text()}, limit: 1, order: "-createdAt"},
+                function (data) {
                   var last = data.results[0];
                   if (last) {
                     var time = moment(last.createdAt).fromNow();
@@ -85,17 +71,14 @@ var display = function () {
                   }
                   setTimeout(function() {element.tooltip("close");}, 2000);
                 }
-              });
+              );
             }
           });
         }
       });
 
-    },
-    error: function (data) {
-      console.error('chatterbox: Failed to get message');
     }
-  });
+  );
 };
 var newRoom = true;
 display();
@@ -114,30 +97,18 @@ var send = function (text) {
     'text': text,
     'roomname': room
   };
-  $.ajax({
-    url: parseURL,
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify(message),
-    success: function (data) {
+  $.post(parseURL,
+    JSON.stringify(message),
+    function (data) {
       console.log('chatterbox: Message sent');
-    },
-    error: function (data) {
-      console.error('chatterbox: Failed to send message');
     }
-  });
+  );
 };
 
 var getRooms = function() {
-  $.ajax({
-    url: parseURL,
-    type: 'GET',
-    contentType: 'application/json',
-    data: {
-      order: "-createdAt",
-      limit: 100,
-    },
-    success: function (data) {
+  $.get(parseURL,
+    {limit: 100, order: "-createdAt"},
+    function (data) {
       var rooms = {};
       rooms[room] = true;
       var $roomSelector = $('.room');
@@ -149,11 +120,8 @@ var getRooms = function() {
           rooms[aRoom] = true;
         }
       }
-    },
-    error: function (data) {
-      console.error('chatterbox: Failed to get rooms');
     }
-  });
+  );
 }
 getRooms();
 setInterval(getRooms, 5000);
