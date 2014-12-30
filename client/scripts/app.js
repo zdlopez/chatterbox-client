@@ -58,6 +58,7 @@ var display = function () {
           $(".friendslist li").tooltip({
             items: "li",
             content: 'loading...',
+            track: true,
             open: function() {
               var element = $(this);
               console.log(element.text());
@@ -77,10 +78,12 @@ var display = function () {
                   if (last) {
                     var lastroom = last.roomname;
                     var time = moment(last.createdAt).fromNow();
-                    element.tooltip({content: "Last post " + time + " in " + lastroom});
+                    element.tooltip({content: "Last post " + time + " in " + lastroom, });
                   } else {
                     element.tooltip({content: "Not found"});
                   }
+                  setTimeout(function() {element.tooltip("close");
+                    }, 2000);
                 }
               });
             }

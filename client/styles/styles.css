@@ -55,7 +55,7 @@ body {
 .chat {
     height: 600px;
     overflow-y: scroll;
-    width: 80%;
+    width: 78%;
     padding: 5px;
     margin-bottom: 5px;
     background-color: #eee;
@@ -65,7 +65,7 @@ body {
 .friendslist {
     height: 600px;
     overflow-y: scroll;
-    width: 14%;
+    width: 18%;
     padding: 5px;
     margin-bottom: 5px;
     background-color: #eee;
@@ -86,7 +86,7 @@ body {
 }
 
 .chat li.friend .msg {
-    color: blue;
+    color: green;
 }
 
 .chat .username {
