@@ -1,4 +1,3 @@
-// YOUR CODE HERE:
 var room = "lobby";
 var friends = {};
 var parseURL = 'https://api.parse.com/1/classes/chatterbox';
@@ -79,14 +78,12 @@ var display = function () {
                 success: function (data) {
                   var last = data.results[0];
                   if (last) {
-                    var lastroom = last.roomname;
                     var time = moment(last.createdAt).fromNow();
-                    element.tooltip({content: "Last post " + time + " in " + lastroom, });
+                    element.tooltip({content: "Last post " + time + " in " + last.roomname });
                   } else {
                     element.tooltip({content: "Not found"});
                   }
-                  setTimeout(function() {element.tooltip("close");
-                    }, 2000);
+                  setTimeout(function() {element.tooltip("close");}, 2000);
                 }
               });
             }
