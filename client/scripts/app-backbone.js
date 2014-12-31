@@ -1,4 +1,4 @@
-var room = "lobby";
+// var room = "lobby";
 var parseURL = 'https://api.parse.com/1/classes/chatterbox';
 
 var Message = Backbone.Model.extend({
@@ -42,7 +42,7 @@ var MessageView = Backbone.View.extend({
         "</span>",
       "</li>"
     ].join('');
-    return this.$el.html(html);
+    return this.$el = $(html);
   }
 });
 
@@ -56,7 +56,7 @@ var FriendView = Backbone.View.extend({
         this.model.get('username'),
       "</li>"
     ].join('');
-    return this.$el.html(html);
+    return this.$el = $(html);
   }
 });
 
@@ -69,7 +69,7 @@ var RoomView = Backbone.View.extend({
         this.model.get('roomname'),
       "</option>"
     ].join('');
-    return this.$el.html(html);
+    return this.$el = $(html);
   }
 });
 
@@ -96,7 +96,7 @@ var MessagesView = Backbone.View.extend({
     "</ul>"
     ].join('');
 
-    this.$el.html(html);
+    this.$el = $(html);
 
     this.$el.find('ul').append(
       this.model.map(function(message) {
@@ -122,7 +122,7 @@ var FriendsView = Backbone.View.extend({
     "</div>"
     ].join('');
 
-    this.$el.html(html);
+    this.$el = $(html);
 
     this.$el.find('ul').append(
       this.model.map(function(friend) {
@@ -151,7 +151,7 @@ var RoomsView = Backbone.View.extend({
       "</select>",
     ].join('');
 
-    this.$el.html(html);
+    this.$el = $(html);
 
     this.$el.find('select').append(
       this.model.map(function(room) {
@@ -164,7 +164,40 @@ var RoomsView = Backbone.View.extend({
   }
 });
 
+var UserInput = Backbone.Model.extend({
+  initialize: function () {
+  }
+});
 
+var UserInputView = Backbone.View.extend({
+  initialize: function () {
+    // TODO event handler for 'send' button
+    // TODO event handler for enter keypress
+  },
+  render: function () {
+    var html = [
+      '<textarea class="inputText" placeholder="Message..."></textarea>',
+      '<button class="textSend">Send</button>'
+    ].join('');
+    return this.$el = $(html);
+  }
+});
+
+var messages = new Messages([new Message('a', 'b', 'c', 'd')]);
+var messagesView = new MessagesView({model: messages});
+
+var friends = new Friends([new Friend('JackyChan')]);
+var friendsView = new FriendsView({model: friends});
+
+var rooms = new Rooms([new Room("test")]);
+var roomsView = new RoomsView({model: rooms});
+
+var userInput = new UserInput();
+var userInputView = new UserInputView({model: userInput});
+
+$(document).ready(function() {
+  $('#main').append(roomsView.render(), messagesView.render(), friendsView.render(), userInputView.render());
+});
 
 
 var sanitize = function(string){
