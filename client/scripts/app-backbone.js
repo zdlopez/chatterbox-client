@@ -29,7 +29,11 @@ var MessageView = Backbone.View.extend({
   },
   render: function () {
     var html = [
-      "<li>",
+      "<li",
+        function() {if (friends.get('username')) {
+          return " class='friend'";
+        }}(),
+      ">",
         "<span class = 'username'>",
           this.model.get('username'),
         "</span>",
@@ -77,6 +81,27 @@ var Messages = Backbone.Collection.extend({
   model: Message
 });
 
+// var getMessages = function(roomname){
+//   $.get(parseURL,
+//     {where: {'roomname': roomname}, limit: 100, order: "-createdAt"},
+//     function (data) {
+//       var allMessages = [];
+//       for (var i = 0; i < data.results.length; i++) {
+//         sanitizeObj(data.results[i]);
+//         var username = data.results[i].username;
+//         var text = data.results[i].text;
+//         var createdAt = moment(data.results[i].createdAt).fromNow();
+//         allMessages.push(new Message(username, text, createdAt, roomname));
+//       }
+//       // console.log(allMessages);
+//       messages = new Messages(allMessages);
+//       // debugger;
+//     }
+//   );
+// };
+// getMessages('lobby');
+// setInterval(getMessages.bind(this, 'lobby'), 1000);
+
 var Friends = Backbone.Collection.extend({
   model: Friend
 });
@@ -87,7 +112,7 @@ var Rooms = Backbone.Collection.extend({
 
 var MessagesView = Backbone.View.extend({
   initialize: function () {
-
+    this.model.on('change', this.render, this);
   },
   render: function () {
     var html = [
@@ -106,6 +131,12 @@ var MessagesView = Backbone.View.extend({
     );
 
     return this.$el;
+  },
+  scrollDown: function(){
+    if (newRoom) {
+      $('.chat').scrollTop( 9000 );
+      newRoom = false;
+    }
   }
 });
 
@@ -183,7 +214,13 @@ var UserInputView = Backbone.View.extend({
   }
 });
 
-var messages = new Messages([new Message('a', 'b', 'c', 'd')]);
+var sampleMsgs = [
+  new Message('user', 'please work', 'right now', 'lobby'),
+  new Message('user', 'pretty please', 'more now', 'lobby'),
+  new Message('JackyChan', 'I think this shoould work', 'yesterday', 'lobby')
+];
+
+var messages = new Messages(sampleMsgs);
 var messagesView = new MessagesView({model: messages});
 
 var friends = new Friends([new Friend('JackyChan')]);
